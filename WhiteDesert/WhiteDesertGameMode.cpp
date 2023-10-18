@@ -4,6 +4,7 @@
 #include "WhiteDesertCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Screen/LogInScreen.h"
+#include "DB.h"
 
 AWhiteDesertGameMode::AWhiteDesertGameMode()
 {
@@ -20,4 +21,5 @@ AWhiteDesertGameMode::AWhiteDesertGameMode()
 void AWhiteDesertGameMode::BeginPlay()
 {
 	GetWorld()->SpawnActor<ALogInScreen>(ALogInScreen::StaticClass());
+	GetWorld()->SpawnActor<ADB>(ADB::StaticClass());
 }
