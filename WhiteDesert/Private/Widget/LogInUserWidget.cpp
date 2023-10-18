@@ -3,7 +3,9 @@
 
 #include "Widget/LogInUserWidget.h"
 #include "Components/Button.h"
-
+#include "Kismet/GameplayStatics.h"
+#include "DB.h"
+#include "Components/EditableText.h"
 
 void ULogInUserWidget::NativeConstruct()
 {
@@ -13,9 +15,15 @@ void ULogInUserWidget::NativeConstruct()
 
 void ULogInUserWidget::OnButtonLogInClicked()
 {
-	
 	if (EditableTextID && EditableTextPassword)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("hi"));
+		AActor* db = UGameplayStatics::GetActorOfClass(GetWorld(), ADB::StaticClass());
+		if (db)
+		{
+			FText ID = EditableTextID->GetText();
+			FText PWD = EditableTextPassword->GetText();
+			ADB* DB = Cast<ADB>(db);
+			DB->Authenticate(&ID,&PWD);
+		}
 	}
 }

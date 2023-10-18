@@ -34,7 +34,11 @@ void ADB::BeginPlay()
 			if (Socket->Connect(*InternetAddress))
 			{
 				UE_LOG(LogTemp, Warning, TEXT("connected"));
-			}					
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("connect failed"));
+			}
 		}
 	}	
 }
@@ -48,9 +52,61 @@ void ADB::Tick(float DeltaTime)
 
 }
 
+const bool ADB::Authenticate(FText* id, FText* pwd) const
+{
+	//send
+	if (!Socket || Socket->GetConnectionState() != SCS_Connected)
+		return false;
+
+
+	FString a = id->ToString() + "/" + pwd->ToString();
+	char * data = TCHAR_TO_ANSI(*a);
+	
+	int32 sent = sizeof(uint8) * a.Len() + 1;
+	if (Socket->Send((uint8*)data, a.Len() + 1, sent))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("sent"));
+	}
+
+	
+	return true;
+}
+
 void ADB::Destroyed()
 {
 	if (Socket)
-		Socket->Close();
+	{
+		if (Socket->Close())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("closed"));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("not closed"));
+		}
+
+	}
+	delete Socket;
+	Socket = nullptr;
+}
+
+void ADB::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	if (Socket)
+	{
+		if (Socket->Close())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("closed"));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("not closed"));
+		}
+
+	}
+	delete Socket;
+	Socket = nullptr;
+
 }
 
