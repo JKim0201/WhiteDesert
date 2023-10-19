@@ -6,6 +6,7 @@
 
 // Sets default values
 ADB::ADB()
+	:requestSent(false)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -49,27 +50,41 @@ void ADB::BeginPlay()
 void ADB::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	if (requestSent)
+	{
+		const int32 BUFFER_SIZE = 256;
+		uint8 RecvBuffer[BUFFER_SIZE];
+		int32 RecvBufferSize = 0;
+		if (Socket->Recv(RecvBuffer, BUFFER_SIZE, RecvBufferSize))
+		{
+			if (RecvBufferSize > 0)
+			{
+				requestSent = false;
+				FString UserId = UTF8_TO_TCHAR(RecvBuffer);
+				UE_LOG(LogTemp, Warning, TEXT("%s"), *UserId);
+			}			
+		}
+	}
+	
 }
 
-const bool ADB::Authenticate(FText* id, FText* pwd) const
+void ADB::Authenticate(FText* id, FText* pwd)
 {
-	//send
-	if (!Socket || Socket->GetConnectionState() != SCS_Connected)
-		return false;
+	if (!Socket || Socket->GetConnectionState() != SCS_Connected || requestSent)
+		return;
 
-
-	FString a = id->ToString() + "/" + pwd->ToString();
-	char * data = TCHAR_TO_ANSI(*a);
+	FString SEmailPassword = id->ToString() + "/" + pwd->ToString();
+	char * SendBuffer = TCHAR_TO_ANSI(*SEmailPassword);
 	
-	int32 sent = sizeof(uint8) * a.Len() + 1;
-	if (Socket->Send((uint8*)data, a.Len() + 1, sent))
+	int32 SendBufferSize = 0;
+	if (Socket->Send((uint8*)SendBuffer, SEmailPassword.Len() + 1, SendBufferSize))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("sent"));
+		if (SendBufferSize > 0 )
+		{
+			requestSent = true;
+		}
 	}
 
-	
-	return true;
 }
 
 void ADB::Destroyed()

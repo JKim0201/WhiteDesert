@@ -13,6 +13,7 @@ class WHITEDESERT_API ADB : public AActor
 	GENERATED_BODY()
 
 	FSocket* Socket;
+	bool requestSent;
 public:	
 	// Sets default values for this actor's properties
 	ADB();
@@ -26,6 +27,6 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	const bool Authenticate(FText* id, FText* pwd) const;
+	void Authenticate(FText* id, FText* pwd);
 
 };
