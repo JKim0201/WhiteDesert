@@ -10,11 +10,8 @@ UCLASS(minimalapi)
 class AWhiteDesertGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-
 public:
 	AWhiteDesertGameMode();
-protected:
-	virtual void BeginPlay() override;
 };
 
 

@@ -10,9 +10,8 @@
 class UButton;
 class UTextBlock;
 class UEditableText;
-/**
- * 
- */
+
+
 UCLASS()
 class WHITEDESERT_API ULogInUserWidget : public UUserWidget
 {
@@ -31,6 +30,8 @@ class WHITEDESERT_API ULogInUserWidget : public UUserWidget
 	UEditableText* EditableTextPassword;
 
 	void NativeConstruct() override;
+public:
+	void ToggleLoginButton(bool on);
 
 protected:
 	UFUNCTION()
