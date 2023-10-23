@@ -1,15 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "PlayerCharacter.h"
 #include "LogInUserWidget.h"
 #include "DataBaseActorComponent.h"
 #include "Kismet/GameplayStatics.h"
 
-// Sets default values
 APlayerCharacter::APlayerCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	UWorld* World = GetWorld();
@@ -33,7 +28,13 @@ void APlayerCharacter::Authenticate(FText* id, FText* pwd)
 
 void APlayerCharacter::ToggleLoginButton(bool on) const
 {
-	LoginWidget->ToggleLoginButton(on);
+	if (LoginWidget)
+		LoginWidget->ToggleLoginButton(on);	
+}
+
+void APlayerCharacter::SetUserID(const int uid)
+{
+	UserID = uid;
 }
 
 
@@ -42,13 +43,11 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 }
 
-// Called every frame
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
-// Called to bind functionality to input
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);

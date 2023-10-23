@@ -18,21 +18,19 @@ class WHITEDESERT_API APlayerCharacter : public ACharacter
 
 	UDataBaseActorComponent* DataBaseComponent;
 
+	int UserID;
 public:
-	// Sets default values for this character's properties
 	APlayerCharacter();
 
 	void Authenticate(FText* id, FText* pwd);
 	void ToggleLoginButton(bool on) const;
+	void SetUserID(const int uid);
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 };
