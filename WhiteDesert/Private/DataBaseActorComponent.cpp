@@ -2,6 +2,7 @@
 #include "networking.h"
 #include "PlayerCharacter.h"
 
+
 UDataBaseActorComponent::UDataBaseActorComponent()
 	:AuthenticationRequestSent(false),
 	SignedIn(false)
@@ -120,6 +121,7 @@ void UDataBaseActorComponent::HandleAuthenticationRequest(void)
 					Owner->ToggleLoginButton(false);
 					SignedIn = true;
 					// prepare for game and move on
+					Owner->MoveToInGame();
 				}
 				
 			}

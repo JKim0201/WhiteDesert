@@ -2,6 +2,17 @@
 #include "LogInUserWidget.h"
 #include "DataBaseActorComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/CapsuleComponent.h"
+
+
+void APlayerCharacter::MoveToInGame(void)
+{
+	FLatentActionInfo lfai;
+	UGameplayStatics::LoadStreamLevel(this, "/Game/Blueprints/Levels/WhiteDesert", true, true, lfai);
+	//UGameplayStatics::OpenLevel(this, "/Game/Blueprints/Levels/WhiteDesert");
+	LoginWidget->RemoveFromViewport();
+	LoginWidget->Destruct();
+}
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -11,7 +22,8 @@ APlayerCharacter::APlayerCharacter()
 	if (World)
 	{	
 		APlayerController* PC = World->GetFirstPlayerController();
-		PC->bShowMouseCursor = true;
+		if (PC)
+			PC->bShowMouseCursor = true;
 		static ConstructorHelpers::FClassFinder<ULogInUserWidget>Widget(TEXT("/Game/Blueprints/Widgets/WBP_LogIn"));
 		LoginWidget = CreateWidget<ULogInUserWidget>(PC, Widget.Class);
 		if (LoginWidget)
@@ -19,7 +31,11 @@ APlayerCharacter::APlayerCharacter()
 	}
 
 	DataBaseComponent = CreateDefaultSubobject<UDataBaseActorComponent>(TEXT("DataBaseComponent"));
+
+	GetMesh()->bAutoActivate = false;
+	GetCapsuleComponent()->bAutoActivate = false;
 }
+
 
 void APlayerCharacter::Authenticate(FText* id, FText* pwd)
 {
@@ -41,6 +57,8 @@ void APlayerCharacter::SetUserID(const int uid)
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
@@ -51,6 +69,5 @@ void APlayerCharacter::Tick(float DeltaTime)
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 

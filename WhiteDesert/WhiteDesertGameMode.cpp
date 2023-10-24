@@ -1,5 +1,6 @@
 #include "WhiteDesertGameMode.h"
 #include "PlayerCharacter.h"
+#include "Kismet/GameplayStatics.h"
 
 
 AWhiteDesertGameMode::AWhiteDesertGameMode()

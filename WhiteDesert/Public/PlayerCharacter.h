@@ -19,12 +19,14 @@ class WHITEDESERT_API APlayerCharacter : public ACharacter
 	UDataBaseActorComponent* DataBaseComponent;
 
 	int UserID;
+
 public:
 	APlayerCharacter();
 
 	void Authenticate(FText* id, FText* pwd);
 	void ToggleLoginButton(bool on) const;
 	void SetUserID(const int uid);
+	void MoveToInGame(void);
 protected:
 	virtual void BeginPlay() override;
 
