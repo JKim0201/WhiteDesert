@@ -10,14 +10,8 @@ UDataBaseActorComponent::UDataBaseActorComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	CreateSocket();
-
-	FIPv4Address IPAddress;
-	FIPv4Address::Parse(FString("192.168.1.66"), IPAddress);
-	FIPv4Endpoint EndPoint(IPAddress, (uint16)9997);
-
-	Address = ISocketSubsystem::Get()->CreateInternetAddr();
-	Address->SetIp(EndPoint.Address.Value);
-	Address->SetPort(EndPoint.Port);
+	SetupAddress();
+	
 }
 
 UDataBaseActorComponent::~UDataBaseActorComponent()
@@ -83,6 +77,17 @@ void UDataBaseActorComponent::CreateSocket(void)
 	CloseSocket();
 	Socket = FTcpSocketBuilder(TEXT("TcpSocket")).AsReusable();
 	ISocketSubsystem* SocketSubsystem = ISocketSubsystem::Get();
+}
+
+void UDataBaseActorComponent::SetupAddress(void)
+{
+	FIPv4Address IPAddress;
+	FIPv4Address::Parse(FString("192.168.1.66"), IPAddress);
+	FIPv4Endpoint EndPoint(IPAddress, (uint16)9997);
+
+	Address = ISocketSubsystem::Get()->CreateInternetAddr();
+	Address->SetIp(EndPoint.Address.Value);
+	Address->SetPort(EndPoint.Port);
 }
 
 void UDataBaseActorComponent::CloseSocket(void)

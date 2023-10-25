@@ -8,16 +8,27 @@
 
 class ULogInUserWidget;
 class UDataBaseActorComponent;
+class UCameraComponent;
+class USpringArmComponent;
 
 UCLASS()
 class WHITEDESERT_API APlayerCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+	UPROPERTY()
 	ULogInUserWidget* LoginWidget;
-
+	
+	UPROPERTY()
 	UDataBaseActorComponent* DataBaseComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UCameraComponent* Camera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	USpringArmComponent* SpringArm;
+
+	UPROPERTY()
 	int UserID;
 
 public:

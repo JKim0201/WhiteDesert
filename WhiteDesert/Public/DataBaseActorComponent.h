@@ -19,6 +19,7 @@ class WHITEDESERT_API UDataBaseActorComponent : public UActorComponent
 
 	void Connect(void);
 	void CreateSocket(void);
+	void SetupAddress(void);
 	void CloseSocket(void);
 	void HandleAuthenticationRequest(void);
 public:	

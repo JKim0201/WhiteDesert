@@ -3,15 +3,23 @@
 #include "DataBaseActorComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
-
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
 
 void APlayerCharacter::MoveToInGame(void)
 {
 	FLatentActionInfo lfai;
 	UGameplayStatics::LoadStreamLevel(this, "/Game/Blueprints/Levels/WhiteDesert", true, true, lfai);
-	//UGameplayStatics::OpenLevel(this, "/Game/Blueprints/Levels/WhiteDesert");
 	LoginWidget->RemoveFromViewport();
-	LoginWidget->Destruct();
+	//LoginWidget->Destruct();
+
+	SetActorLocation(FVector(0, 0, 100));
+	GetMesh()->SetVisibility(true);
+	GetCapsuleComponent()->SetGenerateOverlapEvents(true);
+	GetCharacterMovement()->Activate();
+	GetMesh()->Activate();
+	GetCapsuleComponent()->Activate();
 }
 
 APlayerCharacter::APlayerCharacter()
@@ -30,10 +38,11 @@ APlayerCharacter::APlayerCharacter()
 			LoginWidget->AddToViewport();
 	}
 
-	DataBaseComponent = CreateDefaultSubobject<UDataBaseActorComponent>(TEXT("DataBaseComponent"));
-
-	GetMesh()->bAutoActivate = false;
-	GetCapsuleComponent()->bAutoActivate = false;
+	DataBaseComponent = CreateDefaultSubobject<UDataBaseActorComponent>("DataBaseComponent");
+	Camera = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>("SpringArmComponent");
+	SpringArm->SetupAttachment(RootComponent);
+	Camera->SetupAttachment(SpringArm);
 }
 
 
@@ -56,9 +65,13 @@ void APlayerCharacter::SetUserID(const int uid)
 
 void APlayerCharacter::BeginPlay()
 {
-	Super::BeginPlay();
+	Super::BeginPlay();	
 
-	
+	GetMesh()->SetVisibility(false);
+	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
+	GetCharacterMovement()->Deactivate();
+	GetMesh()->Deactivate();
+	GetCapsuleComponent()->Deactivate();
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
